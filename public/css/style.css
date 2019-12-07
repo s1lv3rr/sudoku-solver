@@ -1,0 +1,25 @@
+#grid{
+    width: 350px;
+    height: 350px;
+    padding: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start
+}
+
+.square{   
+    width: 110px;
+    height: 110px;
+    display: flex;
+    flex-wrap: wrap;
+    border: 2px rgb(107, 105, 105) solid;    
+}
+
+.cell{
+    width: 33px;
+    height: 33px;
+}
+
+input{
+    margin: 7px;
+}
