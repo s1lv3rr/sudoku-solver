@@ -2,8 +2,11 @@
 
 namespace App\SudokuSolver;
 
-class Cell {
-    
+use App\SudokuSolver\SplObjectExtended;
+
+//Represents the cells (91 in total) in sudoku game
+class Cell 
+{    
     private $id;
     private $result = null;
     private $resultPossibilities = [
@@ -16,18 +19,23 @@ class Cell {
         7 => true,
         8 => true,
         9 => true,
-    ];
-    private $square;
-    private $row;
-    private $column;
+    ]; 
+    //Object Storage for this cell's square, row and column   
+    private $parents;
     
-    public function __construct(string $id){
-        $this->id = $id;
+    public function __construct(string $id) 
+    {  
+        $this->id = $id; 
+        $this->parents = new SplObjectExtended();       
     }
-    //When the result has been found, all the others numbers have to be set to false
-    public function setResult(int $number) : bool {
+    //Sets the result after integrity checking then call this object's parents for update. 
+    public function setResult(int $number) : void 
+    {        
+        if($this->result !== null) {
+            return;
+        } 
 
-        if ($this->result == null && $this->integrityCheck($number)) {
+        if ($this->integrityCheck($number)) { 
 
             $this->result = $number;
         
@@ -35,110 +43,80 @@ class Cell {
                 if ($key !== $number) {
                     $this->resultPossibilities[$key] = false;
                 }
-            }
+            }             
 
-            $this->square->updateSiblingsResultPossibilities($this, $this->result);
-            $this->row->updateSiblingsResultPossibilities($this, $this->result);
-            $this->column->updateSiblingsResultPossibilities($this, $this->result);
-            $this->square->unsetProbability($this);
-            $this->row->unsetProbability($this);
-            $this->column->unsetProbability($this);   
-            $this->square->calculateProbabilities();
-            $this->row->calculateProbabilities();
-            $this->column->calculateProbabilities();                                              
-            
-            return true;
-        }
-
-        return false;
-        
-    }
-
-    private function integrityCheck(int $number) : bool {
-
-        $numberOfOccurences = 0;        
-        foreach ($this->square->getCells() as $cell) {
-            if($cell !== $this && $cell->getResult() == $number) {
-                $numberOfOccurences++;
-            }
-        }
-        foreach ($this->row->getCells() as $cell) {
-            if($cell !== $this && $cell->getResult() == $number) {
-                $numberOfOccurences++;
-            }
-        }
-        foreach ($this->column->getCells() as $cell) {
-            if($cell !== $this && $cell->getResult() == $number) {
-                $numberOfOccurences++;
-            }
-        }
-        
-        if($numberOfOccurences > 0) {
-            return false;
-        } else {
-            return true;
+            foreach ($this->parents as $parent) {                               
+                $parent->updateSiblingsResultPossibilities($this);                                          
+                $parent->updateMissingNumbers(); //Each update in this object must trigger his parents objects               
+            } 
         }
     }
-
-    public function updateResultPossibilities(int $number) : void
+    //Checks if the number we are trying to set has result is not duplicated in this cell's square, row and column
+    private function integrityCheck(int $number) : bool 
     {
-        $this->resultPossibilities[$number] = false;
-        //Auto update itselfs if there is only one number possible in this cell regardless of his parent
+        $numberOfOccurence = 0;        
+        
+        foreach ($this->parents as $parent) {
+            foreach ($parent->getCells() as $cell) {
+                if($cell !== $this && $cell->getResult() == $number) {
+                    $numberOfOccurence++;
+                }
+            }
+        }        
+        
+        if($numberOfOccurence > 0) {                                   
+            return false;
+        } else {            
+            return true;
+        }
+    }       
+    //When the result is set in the current object, it will call "updateSiblingsResultPossibilities" method from each parents (see ligne 48 here), "updateSiblingsResultPossibilities" will then call 
+    // "updateResultPossibilities" for each sibling cell object but the current one. 
+    public function updateResultPossibilities(int $result) : void
+    {
+        $this->resultPossibilities[$result] = false;
+        //Auto update itself's result if there is only one number possible in this cell regardless of his parent
         $boolIteration = 0;
         $number;
-
+        //Each update in this object must trigger his parents objects
+        foreach ($this->parents as $parent) {            
+            $parent->updateMissingNumbers();            
+        }  
+        
         foreach ($this->resultPossibilities as $key => $value) {
             if($value) {
                 $boolIteration++;
                 $number = $key;
             }
         }
+
         if($boolIteration == 1) {
-            $this->setResult($number);
-        }
-    }
-    
-    public function getResult() : ?int {
+            $this->setResult($number);            
+        }          
+    }     
+    //Todo ////////////////////////////////////////////////////////////////////
+    // private function parentsUpdateSiblingsResultPossibilities($cell, $number) 
+    // {
+    //     $boolArray = [];
+    //     $boolCount = 0;
 
-        return $this->result;        
-        
-    }
+    //     foreach ($this->parents as $parent) {                               
+    //         $boolArray[$parent->getId()] = $parent->updateSiblingsResultPossibilities($cell, $number);                        
+    //     } 
+    //     foreach ($boolArray as $bool) {
+    //         if($bool) {
+    //             $boolCount++;
+    //         }
+    //     }
+    //     if($boolCount == 3) {
+    //         return true;
+    //     }          
+    // }
     
-    public function getSquare() : ?Square
+    public function getResult() : ?int 
     {
-        return $this->square;
-    }
-
-    public function setSquare(Square $square)
-    {
-        $this->square = $square;
-
-        return $this;
-    }
-    
-    public function getRow() : ?Row
-    {
-        return $this->row;
-    }
-    
-    public function setRow(Row $row)
-    {
-        $this->row = $row;
-
-        return $this;
-    }
-    
-    public function getColumn() : ?Column
-    {
-        return $this->column;
-    }
-   
-    public function setColumn(Column $column)
-    {
-        $this->column = $column;
-
-        return $this;
-    }
+        return $this->result;
+    }    
 
     public function getId() : string
     {
@@ -148,6 +126,15 @@ class Cell {
     public function getResultPossibilities() : array
     {
         return $this->resultPossibilities;
+    }        
+  
+    public function getParents() : SplObjectExtended
+    {
+        return $this->parents;
     }   
-       
+   
+    public function setParents(Structure $parent) : void
+    {
+        $this->parents->attach($parent, $parent->getId());
+    }
 }

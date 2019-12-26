@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+
 use App\SudokuSolver\Grid;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,6 +17,7 @@ class SudokuController extends AbstractController
     {   
         if($request->isMethod('POST')) {
             $request = $request->request->all();
+            //$grid = new Grid($request);
             $grid = new Grid($request);
             
         }      
