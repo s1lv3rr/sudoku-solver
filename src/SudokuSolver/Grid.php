@@ -2,26 +2,26 @@
 
 namespace App\SudokuSolver;
 
-use App\SudokuSolver\Row;
+use App\SudokuSolver\Cell;
 use App\SudokuSolver\Structure;
 
-//The class that manages all square, row and colmun along with the cells within
+//Initialize and manage all squares, rows and columns along with the cells.
 class Grid 
-{        
+{   
+    //Array of Structure object, structure are the squares, rows and columns.
+    //In the Cell class, they are refered as "parents", Cells are the Structures's childs     
     private $structures = [];
     private $cells = [];   
 
     public function __construct(array $request) 
     {        
-        $this->createParents();
-        $this->createChilds($request);
-        $this->initialiseStructuresMissingNumbers(); 
-        $this->setResultsFromRequest($request); 
-        dump($this);        
+        $this->createStructures();
+        $this->createCells();
+        $this->cellsMapping();
+        $this->setResultsFromRequest($request);              
     }
-
     //Creates 27 parents objects (9 squares, 9 rows and 9 columns) and store them in this object "structures" property    
-    private function createParents() : void 
+    private function createStructures() : void 
     {
         for ($i=1; $i <10; $i++) {
             $square = new Structure('Square',$i); //The object id is sent to the construct           
@@ -31,19 +31,85 @@ class Grid
             $this->structures += [$row->getId() => $row];
             $this->structures += [$column->getId() => $column];
         }
+    }    
+    //Creates the 81 Cell objects in total
+    private function createCells() {
+        for ($square=1; $square < 10; $square++) { 
+            if ($square < 4) {
+                //Square 1 to 3 shares the same rows                 
+                for ($row = 1; $row < 4; $row++) {                    
+                    if ($square == 1) {
+                        //But each squares in the 1 to 3 range have differents column                         
+                        for ($column = 1; $column < 4; $column++){
+                            $cell = new Cell($square . "-" . $row . "-" . $column);
+                            $this->cells[$cell->getId()] = $cell;                                      
+                        }                                                                   
+                    }
+                    if ($square == 2) {
+                        for ($column = 4; $column < 7; $column++){                            
+                            $cell = new Cell($square . "-" . $row . "-" . $column);
+                            $this->cells[$cell->getId()] = $cell;
+                        }                                                                      
+                    }
+                    if ($square == 3) {
+                        for ($column = 7; $column < 10; $column++){
+                            $cell = new Cell($square . "-" . $row . "-" . $column);
+                            $this->cells[$cell->getId()] = $cell; 
+                        }                                                                       
+                    }
+                }         
+            }
+            if ($square < 7) {                 
+                for ($row = 4; $row < 7; $row++) {                    
+                    if ($square == 4) {                        
+                        for ($column = 1; $column < 4; $column++){
+                            $cell = new Cell($square . "-" . $row . "-" . $column);
+                            $this->cells[$cell->getId()] = $cell;                                      
+                        }                                                                   
+                    }
+                    if ($square == 5) {
+                        for ($column = 4; $column < 7; $column++){                            
+                            $cell = new Cell($square . "-" . $row . "-" . $column);
+                            $this->cells[$cell->getId()] = $cell;
+                        }                                                                      
+                    }
+                    if ($square == 6) {
+                        for ($column = 7; $column < 10; $column++){
+                            $cell = new Cell($square . "-" . $row . "-" . $column);
+                            $this->cells[$cell->getId()] = $cell; 
+                        }                                                                       
+                    }
+                }         
+            }        
+            if ($square < 10) {                 
+                for ($row = 7; $row < 10; $row++) {                    
+                    if ($square == 7) {                        
+                        for ($column = 1; $column < 4; $column++){
+                            $cell = new Cell($square . "-" . $row . "-" . $column);
+                            $this->cells[$cell->getId()] = $cell;                                      
+                        }                                                                   
+                    }
+                    if ($square == 8) {
+                        for ($column = 4; $column < 7; $column++){                            
+                            $cell = new Cell($square . "-" . $row . "-" . $column);
+                            $this->cells[$cell->getId()] = $cell;
+                        }                                                                      
+                    }
+                    if ($square == 9) {
+                        for ($column = 7; $column < 10; $column++){
+                            $cell = new Cell($square . "-" . $row . "-" . $column);
+                            $this->cells[$cell->getId()] = $cell; 
+                        }                                                                       
+                    }
+                }         
+            }                
+        }
     }
-
-    //Created the 81 cells of the game and map them into the right square, row and column
-    //The request array MUST contain 81 lines in this format ["1-1-1" => "numberSentByTheUser"]
-    //Each cell will be identified by these keys in the request array. "1-1-1" means first square, first row, first column
-    //"3-2-9" : Third square, second line, 9th column. and so on..
-    private function createChilds(array $request) : void 
-    {
-        foreach ($request as $cellId => $value) {            
-            $cell = new Cell($cellId);            
-            array_push($this->cells, $cell);            
-            $cellExplodedId = explode("-",$cellId);    
-            //Object Mapping
+    //Map the rights Cells in the right Structures
+    //NB : $structure->setCell() also triggers $structure->attachChilds();  
+    private function cellsMapping() {
+        foreach ($this->cells as $cell) {
+            $cellExplodedId = explode("-",$cell->getId());
             foreach ($this->structures as $structure) {
                 if ($structure->getId() == "Square ".$cellExplodedId[0]) {
                     $structure->setCell($cell);                    
@@ -58,28 +124,26 @@ class Grid
                     $cell->setParents($structure);                                     
                 }                
             }            
-        }               
-    }
-
-    private function initialiseStructuresMissingNumbers()
-    {
-        foreach ($this->structures as $structure) {
-            $structure->initialiseMissingNumbers();
         }
     }
-
-    //Sets the numbers (Result) sent by the request
-    private function setResultsFromRequest(array $request) : void 
+    //Sets the numbers (Result) sent by the user
+    private function setResultsFromRequest(array $request) 
     {        
         foreach ($request as $cellId => $value) {
             foreach ($this->cells as $cell) {
                 if ($cellId == $cell->getId()) {
-                    if ($value !== "") {                        
-                        $cell->setResult(intval($value));//setResult also updates the probabilties in his object, and check the integrity of the number see Cell class.                                               
+                    if ($value !== "") {
+                        $setResult = $cell->setResultByUser(intval($value));                                                                
                     }                    
                 }
             }                
-        }           
+        }                   
     }    
+
+    public function getCells() : array
+    {
+        return $this->cells;
+    }
+    
 }
 

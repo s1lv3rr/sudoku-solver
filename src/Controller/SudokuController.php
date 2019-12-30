@@ -16,26 +16,19 @@ class SudokuController extends AbstractController
     public function index(Request $request)
     {   
         if($request->isMethod('POST')) {
-            $request = $request->request->all();
-            //$grid = new Grid($request);
-            $grid = new Grid($request);
+
+            $request = $request->request->all();            
+            $grid = new Grid($request);            
             
-        }      
-
-
-        return $this->render('sudoku/index.html.twig', [
-            'controller_name' => 'SudokuController',
+            return $this->render('sudoku/result.html.twig', [
+                'controller_name' => 'SudokuController', 
+                'grid' => $grid           
+            ]);
+        }         
+           
+        return $this->render('sudoku/grid.html.twig', [
+            'controller_name' => 'SudokuController',                      
         ]);
     }
-
-    /**
-     * @Route("/solver", name="solver", methods={"POST"})
-     */
-    public function solver(Request $request)
-    {
-        dd($request);
-        return $this->render('sudoku/index.html.twig', [
-            'controller_name' => 'SudokuController',
-        ]);
-    }
+    
 }

@@ -4,7 +4,7 @@
     padding: 15px;
     display: flex;
     flex-wrap: wrap;
-    align-content: flex-start
+    align-content: flex-start;
 }
 
 .square{   
@@ -12,14 +12,45 @@
     height: 110px;
     display: flex;
     flex-wrap: wrap;
-    border: 2px rgb(107, 105, 105) solid;    
+    justify-content: space-evenly;
+    border: 2px rgb(107, 105, 105) solid;        
 }
 
 .cell{
-    width: 33px;
-    height: 33px;
+    width: 34px;
+    height: 34px;
+    border: 1px solid grey;
+    margin: 0px;    
+}
+
+.cell-solved{
+    width: 34px;
+    height: 34px;
+    border: 1px solid grey;
+    margin: 0px;    
+}
+
+.cell-solved > input {
+    font-weight: bolder;
+    color: green;
+}
+
+.cell-wrongResult{
+    width: 34px;
+    height: 34px;
+    border: 1px solid grey;
+    margin: 0px;    
+}
+
+.cell-wrongResult > input {
+    font-weight: bolder;
+    color: red;
 }
 
 input{
-    margin: 7px;
+    margin: 7px;    
+    font-size: 18px;
+    text-align: center;
+    border: none;
+    font-weight: bolder;
 }

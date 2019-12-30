@@ -6,9 +6,15 @@ use App\SudokuSolver\SplObjectExtended;
 
 //Represents the cells (91 in total) in sudoku game
 class Cell 
-{    
+{   
+    //Id format exemple '1-1-1' : first square, first row, first column 
     private $id;
+    //The final result of a cell
     private $result = null;
+    //Stores the wrong result sent by the user for display purpose.
+    private $wrongResult = null;
+    //Indicates if the result has been sent by the user for display purpose.
+    private $isResultSettedByUser = false;    
     private $resultPossibilities = [
         1 => true,
         2 => true,
@@ -20,24 +26,46 @@ class Cell
         8 => true,
         9 => true,
     ]; 
-    //Object Storage for this cell's square, row and column   
-    private $parents;
+    //Object Storage for the cell's square, row and column   
+    private $parents;    
     
     public function __construct(string $id) 
     {  
         $this->id = $id; 
         $this->parents = new SplObjectExtended();       
     }
-    //Sets the result after integrity checking then call this object's parents for update. 
-    public function setResult(int $number) : void 
+    //Handles the results sent by the user. 
+    //Result sent by user will be display in a different color than the result found by this program
+    public function setResultByUser(int $number) {
+
+        $integrityCheck = $this->integrityCheck($number);
+
+        if (!$integrityCheck InstanceOf Cell) {
+
+            $setResult = $this->setResult($number);
+
+            if ($setResult) {
+                $this->isResultSettedByUser = true;
+            }
+
+        } else {
+
+            $this->wrongResult = $number;            
+        }
+    }
+    
+    public function setResult(int $number) : bool 
     {        
         if($this->result !== null) {
-            return;
+            return false;
         } 
 
-        if ($this->integrityCheck($number)) { 
+        $integrityCheck = $this->integrityCheck($number);
 
-            $this->result = $number;
+        if (!$integrityCheck InstanceOf Cell) { 
+
+            $this->result = $number;            
+            $this->wrongResult = null;
         
             foreach ($this->resultPossibilities as $key => $value) {
                 if ($key !== $number) {
@@ -46,55 +74,66 @@ class Cell
             }             
 
             foreach ($this->parents as $parent) {                               
-                $parent->updateSiblingsResultPossibilities($this);                                          
-                $parent->updateMissingNumbers(); //Each update in this object must trigger his parents objects               
-            } 
-        }
+                $parent->updateSiblingsResultPossibilities($this); //Each parents then will call $this->updateResultPossibilities()                                            
+                $parent->updateMissingNumbers(); //Everytime resultPossibilities is updated, this object parents must be updated               
+            }
+
+            return true;
+
+        } else {
+
+            return false;
+        } 
     }
-    //Checks if the number we are trying to set has result is not duplicated in this cell's square, row and column
-    private function integrityCheck(int $number) : bool 
+    //Return true if the result is not duplicated in this object siblings.
+    //Else it will return the current object.
+    private function integrityCheck(int $number) 
     {
         $numberOfOccurence = 0;        
         
         foreach ($this->parents as $parent) {
             foreach ($parent->getCells() as $cell) {
                 if($cell !== $this && $cell->getResult() == $number) {
-                    $numberOfOccurence++;
+                    return $this;
                 }
             }
-        }        
-        
-        if($numberOfOccurence > 0) {                                   
-            return false;
-        } else {            
-            return true;
-        }
-    }       
-    //When the result is set in the current object, it will call "updateSiblingsResultPossibilities" method from each parents (see ligne 48 here), "updateSiblingsResultPossibilities" will then call 
-    // "updateResultPossibilities" for each sibling cell object but the current one. 
-    public function updateResultPossibilities(int $result) : void
-    {
-        $this->resultPossibilities[$result] = false;
-        //Auto update itself's result if there is only one number possible in this cell regardless of his parent
-        $boolIteration = 0;
-        $number;
-        //Each update in this object must trigger his parents objects
-        foreach ($this->parents as $parent) {            
-            $parent->updateMissingNumbers();            
-        }  
-        
-        foreach ($this->resultPossibilities as $key => $value) {
-            if($value) {
-                $boolIteration++;
-                $number = $key;
-            }
-        }
+        } 
 
-        if($boolIteration == 1) {
-            $this->setResult($number);            
-        }          
-    }     
-    //Todo ////////////////////////////////////////////////////////////////////
+        return true;        
+    }       
+    //When the result is set in the cell, it will call "updateSiblingsResultPossibilities" method from each parents, this method will then call 
+    // in return "updateResultPossibilities" for each sibling cell object. It's a circular update. 
+    public function updateResultPossibilities(int $indexToUpdate) : void
+    {   
+        if ($this->getResult() == null) {
+
+            $this->resultPossibilities[$indexToUpdate] = false;            
+            //Everytime resultPossibilities is updated, this object parents must be updated 
+            foreach ($this->parents as $parent) {            
+                $parent->updateMissingNumbers();            
+            } 
+            
+            //This object can auto update itselfs if there is only one result possible
+            $boolIteration = 0;
+            $result;
+            
+            foreach ($this->resultPossibilities as $number => $bool) {
+                if($bool) {
+                    $boolIteration++;
+                    $result = $number;
+                }
+            }
+
+            if($boolIteration == 1) {
+                $this->setResult($result);            
+            }
+
+        } else {
+            return;
+        }
+        
+    }
+    
     // private function parentsUpdateSiblingsResultPossibilities($cell, $number) 
     // {
     //     $boolArray = [];
@@ -136,5 +175,15 @@ class Cell
     public function setParents(Structure $parent) : void
     {
         $this->parents->attach($parent, $parent->getId());
+    }
+    
+    public function getWrongResult() : ?int
+    {
+        return $this->wrongResult;
+    }
+      
+    public function getIsResultSettedByUser() : bool
+    {
+        return $this->isResultSettedByUser;
     }
 }
