@@ -1,8 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello SudokuController!{% endblock %}
+{% block title %}Sudoku Helper - Résultat{% endblock %}
 
 {% block body %}
+<h1>Sudoku Solver Project</h1>
 <form method="post" autocomplete="off">
     <div id="grid">
         {% for square in 1..9 %}
@@ -13,18 +14,23 @@
                         {% for column in 1..3 %}
                             {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
                             {% set cell =  grid.cells[cellId] %} 
-                            {% if cell.wrongResult is not null %}
+                            {% if cell.duplicatedNumber is not null %}
                             <div class="cell-wrongResult">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.wrongResult }}">
+                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
                             </div>
                             {% endif %}
-                            {% if cell.wrongResult is null and cell.isResultSettedByUser == true %}
+                            {% if cell.result is not null and cell.isResultSettedByUser == true %}
                             <div class="cell">
                                 <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
                             </div>
                             {% endif %}
-                            {% if cell.wrongResult is null and cell.isResultSettedByUser == false %}
+                            {% if cell.result is not null and cell.isResultSettedByUser == false %}
                             <div class="cell-solved">
+                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                            </div>
+                            {% endif %}
+                            {% if cell.duplicatedNumber is null and cell.result is null %}
+                            <div class="cell">
                                 <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
                             </div>
                             {% endif %}
@@ -34,18 +40,23 @@
                         {% for column in 4..6 %}
                             {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
                             {% set cell =  grid.cells[cellId] %} 
-                            {% if cell.wrongResult is not null %}
+                            {% if cell.duplicatedNumber is not null %}
                             <div class="cell-wrongResult">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.wrongResult }}">
+                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
                             </div>
                             {% endif %}
-                            {% if cell.wrongResult is null and cell.isResultSettedByUser == true %}
+                            {% if cell.result is not null and cell.isResultSettedByUser == true %}
                             <div class="cell">
                                 <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
                             </div>
                             {% endif %}
-                            {% if cell.wrongResult is null and cell.isResultSettedByUser == false %}
+                            {% if cell.result is not null and cell.isResultSettedByUser == false %}
                             <div class="cell-solved">
+                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                            </div>
+                            {% endif %}
+                            {% if cell.duplicatedNumber is null and cell.result is null %}
+                            <div class="cell">
                                 <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
                             </div>
                             {% endif %}
@@ -55,18 +66,23 @@
                         {% for column in 7..9 %}
                             {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
                             {% set cell =  grid.cells[cellId] %} 
-                            {% if cell.wrongResult is not null %}
+                            {% if cell.duplicatedNumber is not null %}
                             <div class="cell-wrongResult">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.wrongResult }}">
+                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
                             </div>
                             {% endif %}
-                            {% if cell.wrongResult is null and cell.isResultSettedByUser == true %}
+                            {% if cell.result is not null and cell.isResultSettedByUser == true %}
                             <div class="cell">
                                 <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
                             </div>
                             {% endif %}
-                            {% if cell.wrongResult is null and cell.isResultSettedByUser == false %}
+                            {% if cell.result is not null and cell.isResultSettedByUser == false %}
                             <div class="cell-solved">
+                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                            </div>
+                            {% endif %}
+                            {% if cell.duplicatedNumber is null and cell.result is null %}
+                            <div class="cell">
                                 <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
                             </div>
                             {% endif %}
@@ -80,18 +96,23 @@
                         {% for column in 1..3 %}
                             {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
                             {% set cell =  grid.cells[cellId] %} 
-                            {% if cell.wrongResult is not null %}
+                            {% if cell.duplicatedNumber is not null %}
                             <div class="cell-wrongResult">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.wrongResult }}">
+                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
                             </div>
                             {% endif %}
-                            {% if cell.wrongResult is null and cell.isResultSettedByUser == true %}
+                            {% if cell.result is not null and cell.isResultSettedByUser == true %}
                             <div class="cell">
                                 <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
                             </div>
                             {% endif %}
-                            {% if cell.wrongResult is null and cell.isResultSettedByUser == false %}
+                            {% if cell.result is not null and cell.isResultSettedByUser == false %}
                             <div class="cell-solved">
+                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                            </div>
+                            {% endif %}
+                            {% if cell.duplicatedNumber is null and cell.result is null %}
+                            <div class="cell">
                                 <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
                             </div>
                             {% endif %}
@@ -101,18 +122,23 @@
                         {% for column in 4..6 %}
                             {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
                             {% set cell =  grid.cells[cellId] %} 
-                            {% if cell.wrongResult is not null %}
+                            {% if cell.duplicatedNumber is not null %}
                             <div class="cell-wrongResult">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.wrongResult }}">
+                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
                             </div>
                             {% endif %}
-                            {% if cell.wrongResult is null and cell.isResultSettedByUser == true %}
+                            {% if cell.result is not null and cell.isResultSettedByUser == true %}
                             <div class="cell">
                                 <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
                             </div>
                             {% endif %}
-                            {% if cell.wrongResult is null and cell.isResultSettedByUser == false %}
+                            {% if cell.result is not null and cell.isResultSettedByUser == false %}
                             <div class="cell-solved">
+                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                            </div>
+                            {% endif %}
+                            {% if cell.duplicatedNumber is null and cell.result is null %}
+                            <div class="cell">
                                 <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
                             </div>
                             {% endif %}
@@ -122,18 +148,23 @@
                         {% for column in 7..9 %}
                             {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
                             {% set cell =  grid.cells[cellId] %} 
-                            {% if cell.wrongResult is not null %}
+                            {% if cell.duplicatedNumber is not null %}
                             <div class="cell-wrongResult">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.wrongResult }}">
+                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
                             </div>
                             {% endif %}
-                            {% if cell.wrongResult is null and cell.isResultSettedByUser == true %}
+                            {% if cell.result is not null and cell.isResultSettedByUser == true %}
                             <div class="cell">
                                 <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
                             </div>
                             {% endif %}
-                            {% if cell.wrongResult is null and cell.isResultSettedByUser == false %}
+                            {% if cell.result is not null and cell.isResultSettedByUser == false %}
                             <div class="cell-solved">
+                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                            </div>
+                            {% endif %}
+                            {% if cell.duplicatedNumber is null and cell.result is null %}
+                            <div class="cell">
                                 <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
                             </div>
                             {% endif %}
@@ -147,18 +178,23 @@
                         {% for column in 1..3 %}
                             {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
                             {% set cell =  grid.cells[cellId] %} 
-                            {% if cell.wrongResult is not null %}
+                            {% if cell.duplicatedNumber is not null %}
                             <div class="cell-wrongResult">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.wrongResult }}">
+                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
                             </div>
                             {% endif %}
-                            {% if cell.wrongResult is null and cell.isResultSettedByUser == true %}
+                            {% if cell.result is not null and cell.isResultSettedByUser == true %}
                             <div class="cell">
                                 <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
                             </div>
                             {% endif %}
-                            {% if cell.wrongResult is null and cell.isResultSettedByUser == false %}
+                            {% if cell.result is not null and cell.isResultSettedByUser == false %}
                             <div class="cell-solved">
+                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                            </div>
+                            {% endif %}
+                            {% if cell.duplicatedNumber is null and cell.result is null %}
+                            <div class="cell">
                                 <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
                             </div>
                             {% endif %}
@@ -168,18 +204,23 @@
                         {% for column in 4..6 %}
                             {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
                             {% set cell =  grid.cells[cellId] %} 
-                            {% if cell.wrongResult is not null %}
+                            {% if cell.duplicatedNumber is not null %}
                             <div class="cell-wrongResult">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.wrongResult }}">
+                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
                             </div>
                             {% endif %}
-                            {% if cell.wrongResult is null and cell.isResultSettedByUser == true %}
+                            {% if cell.result is not null and cell.isResultSettedByUser == true %}
                             <div class="cell">
                                 <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
                             </div>
                             {% endif %}
-                            {% if cell.wrongResult is null and cell.isResultSettedByUser == false %}
+                            {% if cell.result is not null and cell.isResultSettedByUser == false %}
                             <div class="cell-solved">
+                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                            </div>
+                            {% endif %}
+                            {% if cell.duplicatedNumber is null and cell.result is null %}
+                            <div class="cell">
                                 <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
                             </div>
                             {% endif %}
@@ -189,18 +230,23 @@
                         {% for column in 7..9 %}
                             {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
                             {% set cell =  grid.cells[cellId] %} 
-                            {% if cell.wrongResult is not null %}
+                            {% if cell.duplicatedNumber is not null %}
                             <div class="cell-wrongResult">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.wrongResult }}">
+                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
                             </div>
                             {% endif %}
-                            {% if cell.wrongResult is null and cell.isResultSettedByUser == true %}
+                            {% if cell.result is not null and cell.isResultSettedByUser == true %}
                             <div class="cell">
                                 <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
                             </div>
                             {% endif %}
-                            {% if cell.wrongResult is null and cell.isResultSettedByUser == false %}
+                            {% if cell.result is not null and cell.isResultSettedByUser == false %}
                             <div class="cell-solved">
+                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                            </div>
+                            {% endif %}
+                            {% if cell.duplicatedNumber is null and cell.result is null %}
+                            <div class="cell">
                                 <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
                             </div>
                             {% endif %}
@@ -209,8 +255,8 @@
                 {% endfor %}
             {% endif %}
         </div>
-        {% endfor %}        
-    </div>
-    <button type="submit">Résoudre</button>
+        {% endfor %} 
+        <button type="submit">Résoudre</button>       
+    </div>   
 </form>
 {% endblock %}

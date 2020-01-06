@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello SudokuController!{% endblock %}
+{% block title %}Sudoku Helper - Entrez votre grille{% endblock %}
 
 {% block body %}
-
+<h1>Sudoku Solver Project</h1>
 <form method="post" autocomplete="off">
     <div id="grid">
         {% for square in 1..9 %}
@@ -93,9 +93,9 @@
                 {% endfor %}
             {% endif %}
         </div>
-        {% endfor %}        
-    </div>
-    <button type="submit">Résoudre</button>
+        {% endfor %}
+        <button type="submit">Résoudre</button>        
+    </div>    
 </form>
 
 {% endblock %}

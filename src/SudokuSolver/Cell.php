@@ -12,7 +12,7 @@ class Cell
     //The final result of a cell
     private $result = null;
     //Stores the wrong result sent by the user for display purpose.
-    private $wrongResult = null;
+    private $duplicatedNumber = null;
     //Indicates if the result has been sent by the user for display purpose.
     private $isResultSettedByUser = false;    
     private $resultPossibilities = [
@@ -33,130 +33,120 @@ class Cell
     {  
         $this->id = $id; 
         $this->parents = new SplObjectExtended();       
-    }
-    //Handles the results sent by the user. 
-    //Result sent by user will be display in a different color than the result found by this program
-    public function setResultByUser(int $number) {
+    }    
 
-        $integrityCheck = $this->integrityCheck($number);
-
-        if (!$integrityCheck InstanceOf Cell) {
-
-            $setResult = $this->setResult($number);
-
-            if ($setResult) {
-                $this->isResultSettedByUser = true;
-            }
-
-        } else {
-
-            $this->wrongResult = $number;            
-        }
-    }
-    
-    public function setResult(int $number) : bool 
-    {        
+    public function setResultByRequest(int $number) 
+    {   
         if($this->result !== null) {
-            return false;
+            return;
+        }
+        if (!$this->integrityCheck($number)) {
+            return;
+        }        
+        if ($this->duplicationCheck($number) !== null) {
+            $this->duplicatedNumber = $number;
+            return;
         } 
 
-        $integrityCheck = $this->integrityCheck($number);
+        $this->setFinalResult($number);
+        $this->isResultSettedByUser = true;
+    } 
 
-        if (!$integrityCheck InstanceOf Cell) { 
+    public function setResult(int $number) 
+    {   
+        if($this->result !== null) {
+            return;
+        }
+        if (!$this->integrityCheck($number)) {
+            return;
+        }        
+        if ($this->duplicatedNumber !== null) {
+            return;
+        }
+        if ($this->duplicationCheck($number) !== null) {
+            return;
+        }
 
-            $this->result = $number;            
-            $this->wrongResult = null;
-        
-            foreach ($this->resultPossibilities as $key => $value) {
-                if ($key !== $number) {
-                    $this->resultPossibilities[$key] = false;
-                }
-            }             
-
-            foreach ($this->parents as $parent) {                               
-                $parent->updateSiblingsResultPossibilities($this); //Each parents then will call $this->updateResultPossibilities()                                            
-                $parent->updateMissingNumbers(); //Everytime resultPossibilities is updated, this object parents must be updated               
-            }
-
-            return true;
-
-        } else {
-
-            return false;
-        } 
+        $this->setFinalResult($number);       
+        $this->updateParents();
     }
+
+    //When the result is set in the cell, it will call "updateSiblingsResultPossibilities" method from each parents, this method will then call 
+    // in return "updateResultPossibilities" for each sibling cell object. It's a circular update. 
+    public function updateResultPossibilities(int $indexToUpdate) : void
+    {           
+        if($this->result !== null) {
+            return;
+        }
+        if ($this->duplicatedNumber !== null) {
+            return;
+        }        
+        if (!$this->resultPossibilities[$indexToUpdate]) {
+            return;
+        }
+       
+        $this->resultPossibilities[$indexToUpdate] = false; 
+        //array_sum : each value of $this->resultPossibilities will be transform in 0 if false and 1 if true.
+        if(array_sum($this->resultPossibilities) == 1) {
+            //setResult will also trigger updateMissingNumbers() for each parents.
+            $result = array_search(true,$this->resultPossibilities);
+            $this->setResult($result);
+        } else {            
+            foreach ($this->parents as $parent) {            
+                $parent->updateMissingNumbers();            
+            } 
+        }        
+    }
+
+    public function updateParents() 
+    {
+        foreach ($this->parents as $parent) {                               
+            $parent->updateCellSiblingsResultPossibilities($this);                                             
+            $parent->updateMissingNumbers();               
+        }   
+    }    
+
+    private function setFinalResult(int $result)
+    {   
+        foreach ($this->resultPossibilities as $number => $value) {
+            if ($number !== $result && $value) {
+                $this->resultPossibilities[$number] = false;
+            }
+        }
+
+        $this->duplicatedNumber = null;
+        $this->result = $result;
+    }
+
     //Return true if the result is not duplicated in this object siblings.
     //Else it will return the current object.
-    private function integrityCheck(int $number) 
+    private function duplicationCheck(int $number) : ?Cell
     {
-        $numberOfOccurence = 0;        
-        
         foreach ($this->parents as $parent) {
             foreach ($parent->getCells() as $cell) {
                 if($cell !== $this && $cell->getResult() == $number) {
                     return $this;
                 }
             }
-        } 
-
-        return true;        
-    }       
-    //When the result is set in the cell, it will call "updateSiblingsResultPossibilities" method from each parents, this method will then call 
-    // in return "updateResultPossibilities" for each sibling cell object. It's a circular update. 
-    public function updateResultPossibilities(int $indexToUpdate) : void
-    {   
-        if ($this->getResult() == null) {
-
-            $this->resultPossibilities[$indexToUpdate] = false;            
-            //Everytime resultPossibilities is updated, this object parents must be updated 
-            foreach ($this->parents as $parent) {            
-                $parent->updateMissingNumbers();            
-            } 
-            
-            //This object can auto update itselfs if there is only one result possible
-            $boolIteration = 0;
-            $result;
-            
-            foreach ($this->resultPossibilities as $number => $bool) {
-                if($bool) {
-                    $boolIteration++;
-                    $result = $number;
-                }
-            }
-
-            if($boolIteration == 1) {
-                $this->setResult($result);            
-            }
-
-        } else {
-            return;
         }
-        
+        return null;        
     }
-    
-    // private function parentsUpdateSiblingsResultPossibilities($cell, $number) 
-    // {
-    //     $boolArray = [];
-    //     $boolCount = 0;
 
-    //     foreach ($this->parents as $parent) {                               
-    //         $boolArray[$parent->getId()] = $parent->updateSiblingsResultPossibilities($cell, $number);                        
-    //     } 
-    //     foreach ($boolArray as $bool) {
-    //         if($bool) {
-    //             $boolCount++;
-    //         }
-    //     }
-    //     if($boolCount == 3) {
-    //         return true;
-    //     }          
-    // }
-    
+    //Comparing the result we are trying to set with the resultPossibilities.
+    private function integrityCheck(int $number) : bool 
+    {
+        if($this->resultPossibilities[$number] == false) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public function getResult() : ?int 
     {
         return $this->result;
-    }    
-
+    } 
+    
     public function getId() : string
     {
         return $this->id;
@@ -177,13 +167,18 @@ class Cell
         $this->parents->attach($parent, $parent->getId());
     }
     
-    public function getWrongResult() : ?int
+    public function getDuplicatedNumber() : ?int
     {
-        return $this->wrongResult;
+        return $this->duplicatedNumber;
     }
       
     public function getIsResultSettedByUser() : bool
     {
         return $this->isResultSettedByUser;
+    }
+
+    public function clearParents() 
+    {
+        return $this->parents = new SplObjectExtended();
     }
 }

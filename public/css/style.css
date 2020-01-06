@@ -1,10 +1,30 @@
+html {
+    background-color: #EDF9F5;
+}
+
+h1{
+    text-align: center;
+    color: #249369;
+}
+
 #grid{
+    margin: auto;
     width: 350px;
     height: 350px;
     padding: 15px;
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
+}
+
+#grid > button {
+    margin-top: 10px;
+    width: 342px;
+    height: 40px;
+    border-radius: 5px;
+    background-color: #249369;
+    color: white;
+    font-weight: bolder;
 }
 
 .square{   
@@ -17,6 +37,7 @@
 }
 
 .cell{
+    background-color: white;
     width: 34px;
     height: 34px;
     border: 1px solid grey;
@@ -24,6 +45,7 @@
 }
 
 .cell-solved{
+    background-color: white;
     width: 34px;
     height: 34px;
     border: 1px solid grey;
@@ -36,6 +58,7 @@
 }
 
 .cell-wrongResult{
+    background-color: white;
     width: 34px;
     height: 34px;
     border: 1px solid grey;

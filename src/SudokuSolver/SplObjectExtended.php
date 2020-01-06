@@ -3,9 +3,10 @@
 namespace App\SudokuSolver;
 use SplObjectStorage;
 
+//Not really used yet
 class SplObjectExtended extends SplObjectStorage {
 
-    public function getObjectById($id) {  
+    public function getById($id) {  
         
         $this->rewind();
 
