@@ -4,259 +4,267 @@
 
 {% block body %}
 <h1>Sudoku Solver Project</h1>
-<form method="post" autocomplete="off">
-    <div id="grid">
-        {% for square in 1..9 %}
-        <div class="square">
-            {% if square < 4 %}
-                {% for row in 1..3 %}
-                    {% if square == 1 %}
-                        {% for column in 1..3 %}
-                            {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
-                            {% set cell =  grid.cells[cellId] %} 
-                            {% if cell.duplicatedNumber is not null %}
-                            <div class="cell-wrongResult">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.result is not null and cell.isResultSettedByUser == true %}
-                            <div class="cell">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.result is not null and cell.isResultSettedByUser == false %}
-                            <div class="cell-solved">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.duplicatedNumber is null and cell.result is null %}
-                            <div class="cell">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
-                    {% if square == 2 %}
-                        {% for column in 4..6 %}
-                            {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
-                            {% set cell =  grid.cells[cellId] %} 
-                            {% if cell.duplicatedNumber is not null %}
-                            <div class="cell-wrongResult">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.result is not null and cell.isResultSettedByUser == true %}
-                            <div class="cell">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.result is not null and cell.isResultSettedByUser == false %}
-                            <div class="cell-solved">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.duplicatedNumber is null and cell.result is null %}
-                            <div class="cell">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
-                    {% if square == 3 %}
-                        {% for column in 7..9 %}
-                            {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
-                            {% set cell =  grid.cells[cellId] %} 
-                            {% if cell.duplicatedNumber is not null %}
-                            <div class="cell-wrongResult">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.result is not null and cell.isResultSettedByUser == true %}
-                            <div class="cell">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.result is not null and cell.isResultSettedByUser == false %}
-                            <div class="cell-solved">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.duplicatedNumber is null and cell.result is null %}
-                            <div class="cell">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-            {% if square < 7 %}
-                {% for row in 4..6 %}
-                    {% if square == 4 %}
-                        {% for column in 1..3 %}
-                            {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
-                            {% set cell =  grid.cells[cellId] %} 
-                            {% if cell.duplicatedNumber is not null %}
-                            <div class="cell-wrongResult">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.result is not null and cell.isResultSettedByUser == true %}
-                            <div class="cell">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.result is not null and cell.isResultSettedByUser == false %}
-                            <div class="cell-solved">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.duplicatedNumber is null and cell.result is null %}
-                            <div class="cell">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
-                    {% if square == 5 %}
-                        {% for column in 4..6 %}
-                            {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
-                            {% set cell =  grid.cells[cellId] %} 
-                            {% if cell.duplicatedNumber is not null %}
-                            <div class="cell-wrongResult">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.result is not null and cell.isResultSettedByUser == true %}
-                            <div class="cell">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.result is not null and cell.isResultSettedByUser == false %}
-                            <div class="cell-solved">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.duplicatedNumber is null and cell.result is null %}
-                            <div class="cell">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
-                    {% if square == 6 %}
-                        {% for column in 7..9 %}
-                            {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
-                            {% set cell =  grid.cells[cellId] %} 
-                            {% if cell.duplicatedNumber is not null %}
-                            <div class="cell-wrongResult">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.result is not null and cell.isResultSettedByUser == true %}
-                            <div class="cell">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.result is not null and cell.isResultSettedByUser == false %}
-                            <div class="cell-solved">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.duplicatedNumber is null and cell.result is null %}
-                            <div class="cell">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-            {% if square < 10 %}
-                {% for row in 7..9 %}
-                    {% if square == 7 %}
-                        {% for column in 1..3 %}
-                            {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
-                            {% set cell =  grid.cells[cellId] %} 
-                            {% if cell.duplicatedNumber is not null %}
-                            <div class="cell-wrongResult">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.result is not null and cell.isResultSettedByUser == true %}
-                            <div class="cell">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.result is not null and cell.isResultSettedByUser == false %}
-                            <div class="cell-solved">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.duplicatedNumber is null and cell.result is null %}
-                            <div class="cell">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
-                    {% if square == 8 %}
-                        {% for column in 4..6 %}
-                            {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
-                            {% set cell =  grid.cells[cellId] %} 
-                            {% if cell.duplicatedNumber is not null %}
-                            <div class="cell-wrongResult">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.result is not null and cell.isResultSettedByUser == true %}
-                            <div class="cell">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.result is not null and cell.isResultSettedByUser == false %}
-                            <div class="cell-solved">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.duplicatedNumber is null and cell.result is null %}
-                            <div class="cell">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
-                    {% if square == 9 %}
-                        {% for column in 7..9 %}
-                            {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
-                            {% set cell =  grid.cells[cellId] %} 
-                            {% if cell.duplicatedNumber is not null %}
-                            <div class="cell-wrongResult">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.result is not null and cell.isResultSettedByUser == true %}
-                            <div class="cell">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.result is not null and cell.isResultSettedByUser == false %}
-                            <div class="cell-solved">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                            {% if cell.duplicatedNumber is null and cell.result is null %}
-                            <div class="cell">
-                                <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
-                            </div>
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-        </div>
-        {% endfor %} 
-        <button type="submit">Résoudre</button>       
-    </div>   
-</form>
+<section>
+    <form method="post" autocomplete="off">
+        <div id="grid">
+            {% for square in 1..9 %}
+            <div class="square">
+                {% if square < 4 %}
+                    {% for row in 1..3 %}
+                        {% if square == 1 %}
+                            {% for column in 1..3 %}
+                                {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
+                                {% set cell =  grid.cells[cellId] %} 
+                                {% if cell.duplicatedNumber is not null %}
+                                <div class="cell-wrongResult">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.result is not null and cell.isResultSettedByUser == true %}
+                                <div class="cell">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.result is not null and cell.isResultSettedByUser == false %}
+                                <div class="cell-solved">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.duplicatedNumber is null and cell.result is null %}
+                                <div class="cell">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        {% if square == 2 %}
+                            {% for column in 4..6 %}
+                                {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
+                                {% set cell =  grid.cells[cellId] %} 
+                                {% if cell.duplicatedNumber is not null %}
+                                <div class="cell-wrongResult">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.result is not null and cell.isResultSettedByUser == true %}
+                                <div class="cell">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.result is not null and cell.isResultSettedByUser == false %}
+                                <div class="cell-solved">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.duplicatedNumber is null and cell.result is null %}
+                                <div class="cell">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        {% if square == 3 %}
+                            {% for column in 7..9 %}
+                                {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
+                                {% set cell =  grid.cells[cellId] %} 
+                                {% if cell.duplicatedNumber is not null %}
+                                <div class="cell-wrongResult">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.result is not null and cell.isResultSettedByUser == true %}
+                                <div class="cell">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.result is not null and cell.isResultSettedByUser == false %}
+                                <div class="cell-solved">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.duplicatedNumber is null and cell.result is null %}
+                                <div class="cell">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                {% if square < 7 %}
+                    {% for row in 4..6 %}
+                        {% if square == 4 %}
+                            {% for column in 1..3 %}
+                                {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
+                                {% set cell =  grid.cells[cellId] %} 
+                                {% if cell.duplicatedNumber is not null %}
+                                <div class="cell-wrongResult">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.result is not null and cell.isResultSettedByUser == true %}
+                                <div class="cell">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.result is not null and cell.isResultSettedByUser == false %}
+                                <div class="cell-solved">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.duplicatedNumber is null and cell.result is null %}
+                                <div class="cell">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        {% if square == 5 %}
+                            {% for column in 4..6 %}
+                                {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
+                                {% set cell =  grid.cells[cellId] %} 
+                                {% if cell.duplicatedNumber is not null %}
+                                <div class="cell-wrongResult">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.result is not null and cell.isResultSettedByUser == true %}
+                                <div class="cell">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.result is not null and cell.isResultSettedByUser == false %}
+                                <div class="cell-solved">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.duplicatedNumber is null and cell.result is null %}
+                                <div class="cell">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        {% if square == 6 %}
+                            {% for column in 7..9 %}
+                                {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
+                                {% set cell =  grid.cells[cellId] %} 
+                                {% if cell.duplicatedNumber is not null %}
+                                <div class="cell-wrongResult">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.result is not null and cell.isResultSettedByUser == true %}
+                                <div class="cell">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.result is not null and cell.isResultSettedByUser == false %}
+                                <div class="cell-solved">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.duplicatedNumber is null and cell.result is null %}
+                                <div class="cell">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                {% if square < 10 %}
+                    {% for row in 7..9 %}
+                        {% if square == 7 %}
+                            {% for column in 1..3 %}
+                                {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
+                                {% set cell =  grid.cells[cellId] %} 
+                                {% if cell.duplicatedNumber is not null %}
+                                <div class="cell-wrongResult">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.result is not null and cell.isResultSettedByUser == true %}
+                                <div class="cell">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.result is not null and cell.isResultSettedByUser == false %}
+                                <div class="cell-solved">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.duplicatedNumber is null and cell.result is null %}
+                                <div class="cell">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        {% if square == 8 %}
+                            {% for column in 4..6 %}
+                                {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
+                                {% set cell =  grid.cells[cellId] %} 
+                                {% if cell.duplicatedNumber is not null %}
+                                <div class="cell-wrongResult">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.result is not null and cell.isResultSettedByUser == true %}
+                                <div class="cell">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.result is not null and cell.isResultSettedByUser == false %}
+                                <div class="cell-solved">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.duplicatedNumber is null and cell.result is null %}
+                                <div class="cell">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        {% if square == 9 %}
+                            {% for column in 7..9 %}
+                                {% set cellId =  square ~ '-' ~ row ~ '-' ~ column %}
+                                {% set cell =  grid.cells[cellId] %} 
+                                {% if cell.duplicatedNumber is not null %}
+                                <div class="cell-wrongResult">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.duplicatedNumber }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.result is not null and cell.isResultSettedByUser == true %}
+                                <div class="cell">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.result is not null and cell.isResultSettedByUser == false %}
+                                <div class="cell-solved">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                                {% if cell.duplicatedNumber is null and cell.result is null %}
+                                <div class="cell">
+                                    <input type="text" name="{{cellId}}" size="1" maxlength="1" class="input" value="{{  cell.result }}">
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+            {% endfor %} 
+            <button type="submit">Résoudre</button>       
+        </div>   
+    </form>
+    <div class="explanation">
+        <p><strong>Noir</strong> : Les numéros que vous avez rentré</font></p>
+        <p><strong id="red">Rouge</strong> : Les numéros qui ne respectent pas les règles</p>
+        <p><strong id="green">Vert</strong> : Les numéros trouvés par l'algorithme </p>
+        <p id="nb">NB : Si vous résolvez à nouveau la grille, tous les numéros seront affichés en noir</p>
+    </div>
+</section>
 {% endblock %}

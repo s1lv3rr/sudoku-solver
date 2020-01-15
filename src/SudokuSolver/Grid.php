@@ -12,9 +12,7 @@ class Grid
     //Array of Structure object, structure are the squares, rows and columns.
     //In the Cell class, they are refered as "parents", Cells are the Structures's childs     
     private $structures = [];
-    private $cells = [];
-    private $structuresClones = [];
-    private $cellsClones = [];
+    private $cells = [];    
     private $isCompleted = false;      
 
     public function __construct(array $request) 
@@ -25,21 +23,12 @@ class Grid
         $this->setResultsFromRequest($request);
         $this->solve();
 
-        $isGridCompleted = $this->isGridCompleted($this->cells);
-        
-        if (!$isGridCompleted) {
-
-            $this->cloneGrid();
-            $tryToSolve = $this->tryToSolve(); 
-            
-            if (!$tryToSolve) {
-                $this->isCompleted = false;
-            } else {
-                $this->isCompleted = true;
-            }
-        } else {
+        if($this->findCellWithNoResult() !== null && $this->isGridCorrect() == true) {
+            $this->backTrackTechnique();
             $this->isCompleted = true;
-        }          
+        } 
+
+        $this->isCompleted = true;        
     }
 
     //Creates 27 parents objects (9 squares, 9 rows and 9 columns) and store them in this object "structures" property    
@@ -191,150 +180,62 @@ class Grid
                 $cell->updateParents();
             }
         }
+    }    
+    //BackTracking method from https://www.youtube.com/watch?v=eqUwSA0xI-s
+    //I had to set back the cell's result property to public to make it work without modifying too much my code
+    //Not ideal but working
+    private function backTrackTechnique() {        
+        
+        $cellWithNoResult = $this->findCellWithNoResult();
+
+        if ($cellWithNoResult == null) {
+
+            return true;
+
+        } else {
+
+            for ($i=1;$i<10;$i++) {
+                
+                if (is_null($cellWithNoResult->duplicationCheck($i))) {
+                    
+                    $cellWithNoResult->result = $i;
+
+                    if ($this->backTrackTechnique()) {
+                        return true;
+                    }
+
+                    $cellWithNoResult->result = null;
+                }
+                
+            }
+            return false;
+        }
     }
+
+    private function findCellWithNoResult() : ?Cell
+    {
+        foreach ($this->cells as $cell) {
+            if ($cell->getResult() == null) {
+                return $cell;
+            }
+        }
+        return null;
+    } 
     
-    private function isGridCompleted(array $cellArray) : bool
-    {           
-        foreach ($cellArray as $cell) {
-            if ($cell->getResult() == null) {                             
+    private function isGridCorrect() : bool
+    {
+        foreach ($this->cells as $cell) {
+            if ($cell->getDuplicatedNumber() !== null) {
                 return false;
             }
         }
         return true;
     }
 
-    private function cloneGrid() 
-    {             
-        $this->cloneCells();
-        $this->cloneStructures();
-        $this->clearParents();
-        $this->clearChilds();
-        $this->clearMissingNumbers();
-        $this->mapping($this->cellsClones, $this->structuresClones);
-        $this->UpdateClonedMissingNumbers();
-    }
-
     public function getCells() : array
     {
         return $this->cells;
-    }
-
-    //Cloning Grid methods--------------------------------------------------------//
-    //---------------------------------------------------------------------------//
-    private function cloneCells()
-    {
-        foreach ($this->cells as $cell) {
-            $cellClone = clone $cell;
-            $this->cellsClones[$cellClone->getId()] = $cellClone;
-        }
-    }
-
-    private function cloneStructures() 
-    {
-        foreach ($this->structures as $structure) {
-            $structureClone = clone $structure;
-            $this->structuresClones[$structureClone->getId()] = $structureClone;
-        }
-    }
-
-    private function clearParents() 
-    {
-        foreach ($this->cellsClones as $cell) {
-            $cell->clearParents();
-        }
-    }
-
-    private function clearChilds()
-    {
-        foreach ($this->structuresClones as $structure) {
-            $structure->clearCells();
-        }
-    }
-
-    private function clearMissingNumbers() 
-    {
-        foreach ($this->structuresClones as $structure) {
-            $structure->createMissingNumbers();
-        }
-    }
-
-    private function UpdateClonedMissingNumbers()
-    {
-        foreach ($this->structuresClones as $structure) {
-            $structure->updateMissingNumbers();
-        }
-    }
-    //------------------------------------------------------------------------//
-    //------------------------------------------------------------------------//
-
-    private function findBestProbability() : array
-    {
-        $splObjectToSolve;
-        $numberToTry;
-        //Splboject Storage contain a maximum of 9 Cell object        
-        $fullSplObjectCount = 9;
-
-        foreach ($this->structures as $structure) {
-            foreach ($structure->getMissingNumbers() as $missingNumber => $splObject) {
-                if ($splObject->count() <= $fullSplObjectCount) {                    
-                    $number = $missingNumber;                    
-                    $splObjectToSolve = $splObject;
-                }
-            }
-        }  
-        
-        $bestProbability[$number] = $splObjectToSolve;        
-        return $bestProbability;
-    }
-
-    private function tryToSolve() : bool
-    {           
-        $bestProbability = $this->findBestProbability();        
-        $number = array_key_first($bestProbability);
-        $cellsToTry = [];
-        
-        foreach ($bestProbability as $splObject) {
-            foreach ($splObject as $cell) {
-                $cellsToTry[$cell->getId()] = true;
-            }
-        }
-        
-        for ($i=0; $i < count($bestProbability[$number]); $i++) {
-
-            if ($i > 0) {
-                //If the grid is not completed after the first iteration, we need to recreate a fresh copy.
-                $this->cloneGrid();
-            }
-            
-            foreach ($cellsToTry as $cellId => $bool) {
-                if ($bool) {
-                    $this->cellsClones[$cellId]->setResultByRequest($number);
-                    $cellsToTry[$cellId] = false;
-                    //Here we try to set the number in one of the cloned cell
-                    //Then we set $cellsToTry[$cellId] to false to avoid doing the same operation
-                    //in the next iteration of the FOR Loop 
-                    break;
-                }
-            }
-
-            $isGridCompleted = $this->isGridCompleted($this->cellsClones);
-            //If the grid is completed we can return true    
-            if ($isGridCompleted) {
-                $this->cells = $this->cellsClones;
-                $this->structures = $this->structuresClones;
-                return true;                
-            }
-            //If it's not the For loop continues, it will recreate a new $this->cloneGrid() 
-            //and then will try to set the number in a cell that is still true in 
-            //$cellsToTry[$cellId]       
-        } 
-
-        return false; 
     } 
 
-    public function getIsCompleted() : bool
-    {
-        return $this->isCompleted;
-    }
 }
 

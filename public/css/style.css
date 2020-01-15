@@ -5,13 +5,16 @@ html {
 h1{
     text-align: center;
     color: #249369;
+    font-style: italic;
+    font-family: sans-serif;
+    font-size: 3em;
 }
 
 #grid{
-    margin: auto;
+    margin: auto;    
     width: 350px;
     height: 350px;
-    padding: 15px;
+    padding: 0px 15px 15px 15px;
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
@@ -76,4 +79,29 @@ input{
     text-align: center;
     border: none;
     font-weight: bolder;
+}
+
+section{
+    display: flex;    
+    justify-content: center;    
+}
+
+#red{
+    color: red;
+}
+
+#green{
+    color:green;
+}
+
+#nb{
+    font-style: italic;
+}
+
+.explanation{
+    height: 7%;
+    background-color: white;    
+    padding-left: 15px;
+    padding-right: 15px;
+    border-radius: 5px;
 }

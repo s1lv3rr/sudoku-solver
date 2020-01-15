@@ -10,7 +10,7 @@ class Cell
     //Id format exemple '1-1-1' : first square, first row, first column 
     private $id;
     //The final result of a cell
-    private $result = null;
+    public $result = null;
     //Stores the wrong result sent by the user for display purpose.
     private $duplicatedNumber = null;
     //Indicates if the result has been sent by the user for display purpose.
@@ -118,9 +118,9 @@ class Cell
         $this->result = $result;
     }
 
-    //Return true if the result is not duplicated in this object siblings.
+    //Return null if the result is not duplicated in this object siblings.
     //Else it will return the current object.
-    private function duplicationCheck(int $number) : ?Cell
+    public function duplicationCheck(int $number) : ?Cell
     {
         foreach ($this->parents as $parent) {
             foreach ($parent->getCells() as $cell) {
@@ -131,7 +131,7 @@ class Cell
         }
         return null;        
     }
-
+    
     //Comparing the result we are trying to set with the resultPossibilities.
     private function integrityCheck(int $number) : bool 
     {

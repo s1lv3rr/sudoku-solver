@@ -70,8 +70,7 @@ class Structure
             }
         }        
         $this->uniqueCandidateRule();
-        $this->squareToRowOrColumnRule();
-        //$this->nakedPairRule();  Work In Progress                
+        $this->squareToRowOrColumnRule();                       
     }
 
     //Every Cell objects with a result must be unset (detach) from the object storages
@@ -205,77 +204,7 @@ class Structure
     public function getMissingNumbers() : array
     {
         return $this->missingNumbers;
-    }
-
-    public function clearCells() 
-    {
-        return $this->cells = [];
-    }
-
-    //WORK IN PROGRESS
-    // private function nakedPairRule() 
-    // {   
-    //     $nakedPair = $this->findNakedPairs(); //Return an array of 2 or Null
-
-    //     if ($nakedPair !== null && !in_array($nakedPair,$this->nakedPairs)) {
-            
-    //         $firstPair = array_slice($nakedPair,0,1);
-    //         $secondPair = array_slice($nakedPair,1);
-            
-    //         foreach ($this->cells as $cell) {
-    //             if ($cell->getId() !== array_key_first($firstPair) && $cell->getId() !== array_key_first($secondPair)) {                    
-    //                 foreach ($firstPair as $cellId => $arrayOfNumbers) {                        
-    //                     foreach ($arrayOfNumbers as $index => $number) {                            
-    //                         $cell->updateResultPossibilities($number);
-    //                     }                        
-    //                 }
-    //             }
-    //         }
-    //     }     
-        
-    //     array_push($this->nakedPairs, $nakedPair);
-    // }
-
-    //Will find 1 naked pairs if there is one, if there is more, they will be ignored
-    //Not optimal....
-    //A naked pair is 2 cells with only 2 resultPossibilities in common
-    // private function findNakedPairs() : ?array
-    // {   
-    //     $cellsIdsAndPossibleNumbers = [];
-    //     $pairs = [];
-        
-    //     foreach ($this->cells as $cell) {
-
-    //         $cellsIdsAndPossibleNumbers[$cell->getId()] = [];
-
-    //         foreach ($cell->getResultPossibilities() as $number => $bool) {
-    //             if ($bool) {
-    //                 array_push($cellsIdsAndPossibleNumbers[$cell->getId()], $number);
-    //             }
-    //         }             
-    //     }
-
-    //     foreach ($cellsIdsAndPossibleNumbers as $index =>$array) {
-    //         if (count($array) !== 2) {
-    //             unset($cellsIdsAndPossibleNumbers[$index]); //If the cell have more than 2 resultPossibilities
-    //         }
-    //     }
-
-    //     //Double loop on the same array to find out if there is two elements with the same value but different id's         
-    //     foreach ($cellsIdsAndPossibleNumbers as $cellId => $numberArray) {                
-    //         foreach ($cellsIdsAndPossibleNumbers as $cellId2 => $numberArray2) {                    
-    //             if ($numberArray == $numberArray2 && $cellId !== $cellId2) {
-    //                 $pairs[$cellId] = [];
-    //                 $pairs[$cellId] = $numberArray;
-    //             }                    
-    //         }
-    //     }       
-
-    //     if (!empty($pairs)) {                        
-    //         return $pairs;
-    //     } else {
-    //         return null;
-    //     }                
-    // }
+    }    
+    
 }
 
