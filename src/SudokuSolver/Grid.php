@@ -23,9 +23,12 @@ class Grid
         $this->createCells();
         $this->mapping($this->cells, $this->structures);
         $this->setResultsFromRequest($request);
-        $this->solve();
 
-        if($this->findCellWithNoResult() !== null && $this->isGridCorrect() == true) {
+        if ($this->isGridCorrect()) {
+            $this->solve();
+        }
+
+        if(!$this->isCompleted && $this->isGridCorrect()) {
             $this->startTime = time();
             $this->backTrackTechnique();            
         } 
