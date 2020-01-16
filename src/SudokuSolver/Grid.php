@@ -28,7 +28,7 @@ class Grid
             $this->isCompleted = true;
         } 
 
-        $this->isCompleted = true;        
+        $this->isCompleted = true;            
     }
 
     //Creates 27 parents objects (9 squares, 9 rows and 9 columns) and store them in this object "structures" property    
@@ -182,6 +182,7 @@ class Grid
         }
     }    
     //BackTracking method from https://www.youtube.com/watch?v=eqUwSA0xI-s
+    //It ensures that the grid will be completed even if it's empty
     //I had to set back the cell's result property to public to make it work without modifying too much my code
     //Not ideal but working
     private function backTrackTechnique() {        
@@ -207,7 +208,7 @@ class Grid
                     $cellWithNoResult->result = null;
                 }
                 
-            }
+            }            
             return false;
         }
     }
@@ -236,6 +237,5 @@ class Grid
     {
         return $this->cells;
     } 
-
 }
 
