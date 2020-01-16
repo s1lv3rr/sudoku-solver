@@ -13,7 +13,9 @@ class Grid
     //In the Cell class, they are refered as "parents", Cells are the Structures's childs     
     private $structures = [];
     private $cells = [];    
-    private $isCompleted = false;      
+    private $isCompleted = false;
+    private $incorrectGrid = false; 
+    private $startTime;     
 
     public function __construct(array $request) 
     {        
@@ -24,8 +26,8 @@ class Grid
         $this->solve();
 
         if($this->findCellWithNoResult() !== null && $this->isGridCorrect() == true) {
-            $this->backTrackTechnique();
-            $this->isCompleted = true;
+            $this->startTime = time();
+            $this->backTrackTechnique();            
         } 
 
         $this->isCompleted = true;            
@@ -185,8 +187,14 @@ class Grid
     //It ensures that the grid will be completed even if it's empty
     //I had to set back the cell's result property to public to make it work without modifying too much my code
     //Not ideal but working
-    private function backTrackTechnique() {        
-        
+    private function backTrackTechnique() 
+    {   
+        $currentTime = time() - $this->startTime;     
+        if ($currentTime > 0.3) {
+            $this->incorrectGrid = true;
+            return;
+        }
+
         $cellWithNoResult = $this->findCellWithNoResult();
 
         if ($cellWithNoResult == null) {
@@ -211,6 +219,7 @@ class Grid
             }            
             return false;
         }
+        $this->isCompleted = true;
     }
 
     private function findCellWithNoResult() : ?Cell
@@ -237,5 +246,10 @@ class Grid
     {
         return $this->cells;
     } 
+   
+    public function getIncorrectGrid() : bool
+    {
+        return $this->incorrectGrid;
+    }
 }
 
