@@ -105,4 +105,9 @@ section{
     border-radius: 5px;
 }
 
+a:-webkit-any-link{
+    color: white;
+    text-decoration: none;
+}
+
 

@@ -34,7 +34,7 @@ class Cell
         $this->id = $id; 
         $this->parents = new SplObjectExtended();       
     }    
-
+    //Result set by user will be displayed in Black
     public function setResultByRequest(int $number) 
     {   
         if($this->result !== null) {
@@ -47,11 +47,13 @@ class Cell
             $this->duplicatedNumber = $number;
             return;
         } 
-
+        //Every result setted should trigerred $this->updateParents(), but in the case of the result set by the user
+        //We don't want the algorithm to find a solution by logical before all result given by the user are setted
+        //Otherwise some result would be display in green while it has been sent from the user.
         $this->setFinalResult($number);
         $this->isResultSettedByUser = true;
     } 
-
+    //Result found by the algorythm will be displayed in green
     public function setResult(int $number) 
     {   
         if($this->result !== null) {

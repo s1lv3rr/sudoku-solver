@@ -23,7 +23,8 @@ class Grid
         $this->createCells();
         $this->mapping($this->cells, $this->structures);
         $this->setResultsFromRequest($request);
-
+        //Once all result sent from the user are setted (black colour)
+        //We can start to solve the grid. Result found will then be displayed in green
         if ($this->isGridCorrect()) {
             $this->solve();
         }
@@ -177,7 +178,8 @@ class Grid
             }                
         }                   
     }
-
+    //Triggers the update of each parents, resulting of a circular update between each parents and cells
+    //Everytime a parent is updated, it will try to find a result using several solving methods  
     private function solve()
     {
         foreach ($this->cells as $cell) {
@@ -192,6 +194,8 @@ class Grid
     //Not ideal but working
     private function backTrackTechnique() 
     {   
+        //Because this loop would turn for ever in case of a grid that is impossible to solve
+        //I give it a 0.3sec timeout, after this time if the grid is not complete, it will be considered impossible 
         $currentTime = time() - $this->startTime;     
         if ($currentTime > 0.3) {
             $this->incorrectGrid = true;
