@@ -37,7 +37,9 @@ class Cell
     //Result set by user will be displayed in Black
     public function setResultByRequest($number) 
     {   
-        if (!is_int($number)) {
+        $number = intval($number); 
+
+        if ($number == 0) {
             $this->duplicatedNumber = $number;
             return;
         } 
