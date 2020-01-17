@@ -36,13 +36,20 @@ class Cell
     }    
     //Result set by user will be displayed in Black
     public function setResultByRequest($number) 
-    {   
-        $number = intval($number); 
-
+    {    
+        //if number is actually 0     
         if ($number == 0) {
             $this->duplicatedNumber = $number;
             return;
-        } 
+        }
+        
+        $number = intval($number);
+        //If intval failed it will return 0 (in case of non numeric)
+        if ($number == 0) {
+            $this->duplicatedNumber = $number;
+            return;
+        }
+
         if($this->result !== null) {
             return;
         }
