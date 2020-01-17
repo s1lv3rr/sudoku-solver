@@ -172,7 +172,7 @@ class Grid
             foreach ($this->cells as $cell) {
                 if ($cellId == $cell->getId()) {
                     if ($value !== "") {                        
-                        $cell->setResultByRequest(intval($value));                                                                
+                        $cell->setResultByRequest($value);                                                                
                     }                    
                 }
             }                
