@@ -78,7 +78,7 @@ input{
     text-align: center;
     border: none;
     font-weight: bolder;
-    width: 100%;
+    width: 70%;
 }
 
 section{
@@ -111,4 +111,11 @@ a:-webkit-any-link{
     text-decoration: none;
 }
 
+button > span{
+    padding: 13px 115px;
+}
+
+a > span{
+    padding: 13px 115px;
+}
 
